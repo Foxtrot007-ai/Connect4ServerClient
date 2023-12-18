@@ -57,7 +57,7 @@ public class GameManager {
 		return playerAnswer;
 	}
 	public void sendChangeToClients(int y, int x, int index) {
-		con.sendMessage("change:x/y", game.playerTurn);
+		con.sendMessage("change:" + y + "/" + x + "/" + index, game.playerTurn);
 		app.addNewLog("changeInfo sent to player " + index);
 		try {
 			do{
@@ -100,8 +100,9 @@ public class GameManager {
 	}
 	
 	public void sendLastInfo() {
-		con.sendMessage("winner:" + winner, 0);
-		con.sendMessage("winner:" + winner, 1);
+		con.sendMessage("winner", winner);
+		con.sendMessage("looser", (winner + 1) % 2);
+		
 		app.addNewLog("Result sent");
 	}
 	
