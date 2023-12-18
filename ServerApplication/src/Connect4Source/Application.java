@@ -51,8 +51,8 @@ public class Application extends JFrame{
 		for(int i = 0; i < 6; i++) {
 			for(int j = 0; j < 7; j++) {
 				JButton button = new JButton();
-				button.setBounds(buttonStartX + i * (buttonWidth + buttonBorder),
-						         buttonStartY + j * (buttonHeight + buttonBorder), 
+				button.setBounds(buttonStartX + j * (buttonWidth + buttonBorder),
+						         buttonStartY + i * (buttonHeight + buttonBorder), 
 						         buttonWidth, 
 						         buttonHeight);
 				button.setBackground(Color.GRAY);
@@ -72,15 +72,25 @@ public class Application extends JFrame{
 		}
 	}
 	
-	public void updateGameStateView(int x, int y, Color c) {
-		JButton button = gameStateView[x][y];
+	public void updateGameStateView(int y, int x, Color c) {
+		JButton button = gameStateView[y][x];
 		button.setBackground(c);
 		button.repaint();
+	}
+	
+	public void addItemsToFrame() {
+		this.add(tableScroller);
+		for(int i = 0; i < 6; i++) {
+			for(int j = 0; j < 7; j++) {
+				this.add(gameStateView[i][j]);
+			}
+		}
 	}
 	
 	public Application() {
 		instantiateLogTable();
 		instantiateGameStateField();
+		addItemsToFrame();
 		
 		this.setLayout(null);
 		this.setSize(width, height); 
