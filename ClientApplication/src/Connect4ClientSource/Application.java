@@ -18,7 +18,7 @@ public class Application extends JFrame{
 	public int buttonBorder = 2;
 	public JButton[][] gameStateView = new JButton[6][7];
 	
-	public JLabel endInfo = new JLabel();
+	public JLabel endInfo = new JLabel("hello");
 	public int labelHeight = 50;
 	public int labelWidth = 400;
 	public int labelStartX = 100;
@@ -29,8 +29,15 @@ public class Application extends JFrame{
 			for(int j = 0; j < 7; j++) {
 				JButton button = gameStateView[i][j];
 				if(button.getBackground() == Color.GRAY) {
-					button.setEnabled(b);
-					button.repaint();
+					if(i < 5) {
+						if(gameStateView[i+1][j].getBackground() != Color.GRAY) {
+							button.setEnabled(b);
+							button.repaint();
+						}
+					}else {
+						button.setEnabled(b);
+						button.repaint();
+					}
 				}
 			}
 		}
@@ -62,8 +69,9 @@ public class Application extends JFrame{
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							disableAllButtons(false);
-							game.makeMove(y, x);
+							game.makeMove(y,x);
 							game.buttonClicked = true;
+							//System.out.print(game.buttonClicked);
 						}
 					}
 				);
@@ -103,10 +111,12 @@ public class Application extends JFrame{
 		game = g;
 		
 		instantiateGameStateField();
+		instantiateEndInfo();
 		addItemsToFrame();
-		
+
 		this.setLayout(null);
-		this.setSize(width, height); 
+		this.setSize(width, height);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
 }  

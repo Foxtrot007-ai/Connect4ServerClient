@@ -5,9 +5,10 @@ import java.io.IOException;
 
 public class GameManager {
 	
-	public boolean buttonClicked;
+	public volatile boolean buttonClicked;
 	public Application app;
 	public ConnectionProvider con;
+	public int i = 0;
 	
 	public void makeMove(int y, int x) {
 		con.sendMessage("move:" + y + "/" + x);
@@ -20,8 +21,7 @@ public class GameManager {
 	}
 	
 	public void updateView(String move) {
-		move.replaceFirst("move:", "");
-		String[] tuple = move.split("/");
+		String[] tuple = move.replaceFirst("change:", "").split("/");
 		int y = Integer.parseInt(tuple[0]);
 		int x = Integer.parseInt(tuple[1]);
 		int c = Integer.parseInt(tuple[2]);
@@ -35,26 +35,31 @@ public class GameManager {
 		while(looping) {
 			result = "";
 			try {
+				app.setEndInfoText("Waiting for server info");
 				result = con.getMessageFromServer();
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
 			
-			if(result.contains("move:")) {
+			if(result.contains("change:")) {
+				app.setEndInfoText("Updating.");
+				con.sendMessage("ok");
 				updateView(result);
 			}
 			
 			if(result.contains("choose")) {
-				con.sendMessage("ok");
+				app.setEndInfoText("Wait for your move.");
 				waitForMove();
 			}
 			
 			if(result.contains("winner")) {
 				app.setEndInfoText("You won :)");
+				looping = false;
 			}
 			
 			if(result.contains("loser")) {
 				app.setEndInfoText("You lost :(");
+				looping = false;
 			}
 		}
 	}

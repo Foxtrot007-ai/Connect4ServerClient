@@ -50,7 +50,7 @@ public class Application extends JFrame{
 	public void instantiateGameStateField() {
 		for(int i = 0; i < 6; i++) {
 			for(int j = 0; j < 7; j++) {
-				JButton button = new JButton();
+				JButton button = new JButton(i+""+j);
 				button.setBounds(buttonStartX + j * (buttonWidth + buttonBorder),
 						         buttonStartY + i * (buttonHeight + buttonBorder), 
 						         buttonWidth, 
@@ -94,6 +94,7 @@ public class Application extends JFrame{
 		
 		this.setLayout(null);
 		this.setSize(width, height); 
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
 }  

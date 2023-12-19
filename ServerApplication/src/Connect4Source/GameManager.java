@@ -57,7 +57,7 @@ public class GameManager {
 		return playerAnswer;
 	}
 	public void sendChangeToClients(int y, int x, int index) {
-		con.sendMessage("change:" + y + "/" + x + "/" + index, game.playerTurn);
+		con.sendMessage("change:" + y + "/" + x + "/" + game.playerTurn, index);
 		app.addNewLog("changeInfo sent to player " + index);
 		try {
 			do{
@@ -71,15 +71,14 @@ public class GameManager {
 	}
 	
 	public void makeMove(String move) {
-		move.replaceFirst("move:", "");
-		String[] pair = move.split("/");
+		String[] pair = move.replaceFirst("move:", "").split("/");
 		int y = Integer.parseInt(pair[0]);
 		int x = Integer.parseInt(pair[1]);
 		try {
 			game.makeMove(y, x);
 			sendChangeToClients(y,x,0);
 			sendChangeToClients(y,x,1);
-			app.updateGameStateView(x, y, (game.playerTurn == 0) ? Color.BLUE : Color.RED);
+			app.updateGameStateView(y, x, (game.playerTurn == 0) ? Color.BLUE : Color.RED);
 		} catch (Exception e) {
 			app.addNewLog(e.getMessage());
 			app.addNewLog("Can't make move");
@@ -101,12 +100,13 @@ public class GameManager {
 	
 	public void sendLastInfo() {
 		con.sendMessage("winner", winner);
-		con.sendMessage("looser", (winner + 1) % 2);
-		
-		app.addNewLog("Result sent");
+		app.addNewLog("Winner info sent to player: " + winner);
+		con.sendMessage("loser", (winner + 1) % 2);
+		app.addNewLog("Loser info sent to player: " + (winner + 1) % 2);
 	}
 	
 	public void gameLoop() {
+		game.startGame(game.playerTurn);
 		while(true) {
 			String answer = askPlayer();
 			makeMove(answer);
